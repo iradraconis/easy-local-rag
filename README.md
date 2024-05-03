@@ -7,12 +7,12 @@ https://www.youtube.com/watch?v=Oe-7dGDyzPM
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/vFGng_3hDRk/0.jpg)](https://www.youtube.com/watch?v=vFGng_3hDRk)
 
 ### Setup
-1. git clone https://github.com/AllAboutAI-YT/easy-local-rag.git
+1. git clone 
 2. cd dir
 3. pip install -r requirements.txt
 4. Install Ollama (https://ollama.com/download)
 5. ollama pull llama3 (etc)
-6. ollama pull mxbai-embed-large
+6. ollama pull "your_embedding_model"
 7. run upload.py (pdf, .txt, JSON)
 8. run localrag.py (with query re-write)
 9. run localrag_no_rewrite.py (no query re-write)

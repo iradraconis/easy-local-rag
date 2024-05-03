@@ -22,7 +22,7 @@ def get_relevant_context(rewritten_input, vault_embeddings, vault_content, top_k
     if vault_embeddings.nelement() == 0:  # Check if the tensor has any elements
         return []
     # Encode the rewritten input
-    input_embedding = ollama.embeddings(model='mxbai-embed-large', prompt=rewritten_input)["embedding"]
+    input_embedding = ollama.embeddings(model='mayflowergmbh/occiglot-7b-de-en-instruct', prompt=rewritten_input)["embedding"]
     # Compute cosine similarity between the input and vault embeddings
     cos_scores = torch.cosine_similarity(torch.tensor(input_embedding).unsqueeze(0), vault_embeddings)
     # Adjust top_k if it's greater than the number of available scores
@@ -110,14 +110,14 @@ def ollama_chat(user_input, system_message, vault_embeddings, vault_content, oll
 # Parse command-line arguments
 print(NEON_GREEN + "Parsing command-line arguments..." + RESET_COLOR)
 parser = argparse.ArgumentParser(description="Ollama Chat")
-parser.add_argument("--model", default="llama3", help="Ollama model to use (default: llama3)")
+parser.add_argument("--model", default="mayflowergmbh/occiglot-7b-de-en-instruct", help="Ollama model to use (default: llama3)")
 args = parser.parse_args()
 
 # Configuration for the Ollama API client
 print(NEON_GREEN + "Initializing Ollama API client..." + RESET_COLOR)
 client = OpenAI(
     base_url='http://localhost:11434/v1',
-    api_key='llama3'
+    api_key='mayflowergmbh/occiglot-7b-de-en-instruct'
 )
 
 # Load the vault content
@@ -126,13 +126,18 @@ vault_content = []
 if os.path.exists("vault.txt"):
     with open("vault.txt", "r", encoding='utf-8') as vault_file:
         vault_content = vault_file.readlines()
+    print("Vault Content: ist nicht leer")
+else:
+    print(CYAN + "No vault content found." + RESET_COLOR)
+    exit()
+
+vault_embeddings = []
 
 # Generate embeddings for the vault content using Ollama
-print(NEON_GREEN + "Generating embeddings for the vault content..." + RESET_COLOR)
-vault_embeddings = []
 for content in vault_content:
-    response = ollama.embeddings(model='mxbai-embed-large', prompt=content)
-    vault_embeddings.append(response["embedding"])
+    if content.strip():  # Überprüfen, ob der Inhalt nicht leer ist
+        response = ollama.embeddings(model='mayflowergmbh/occiglot-7b-de-en-instruct', prompt=content)
+        vault_embeddings.append(response["embedding"])
 
 # Convert to tensor and print embeddings
 print("Converting embeddings to tensor...")

@@ -1,4 +1,4 @@
-sourceopenai
+openai
 torch
 PyPDF2
 ollama
